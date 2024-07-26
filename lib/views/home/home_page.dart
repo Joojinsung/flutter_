@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../theme.dart';
@@ -81,7 +82,6 @@ class _HomePageState extends State<HomePage> {
                         final categories =
                             ref.watch(fetchHomeCategoriesProvider);
 
-
                         return switch (categories) {
                           AsyncData(:final value) => GridView.builder(
                               scrollDirection: Axis.horizontal,
@@ -94,6 +94,10 @@ class _HomePageState extends State<HomePage> {
                               itemBuilder: (context, index) {
                                 final data = value[index];
                                 return InkWell(
+                                  onTap: () {
+                                    context.push("/home/category/${data.id}");
+
+                                  },
                                   child: Column(
                                     children: [
                                       CircleAvatar(
@@ -195,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                                     padding: const EdgeInsets.all(16.0),
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           project?.isOpen == "close"
@@ -222,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                                           decoration: BoxDecoration(
                                             color: AppColors.bg,
                                             borderRadius:
-                                            BorderRadius.circular(3),
+                                                BorderRadius.circular(3),
                                           ),
                                           padding: EdgeInsets.symmetric(
                                             horizontal: 6,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wadiz_clone/views/category/category_page.dart';
 import 'package:wadiz_clone/views/home/home_page.dart';
 import 'package:wadiz_clone/views/widiz_app_shell.dart';
 
@@ -20,11 +21,16 @@ final router = GoRouter(
           },
           routes: [
             GoRoute(
-              path: "/home",
-              parentNavigatorKey: _shellNavigatorKey,
-              builder: (context, state) {
-                return HomePage();
-              },
-            ),
+                path: "/home",
+                parentNavigatorKey: _shellNavigatorKey,
+                builder: (context, state) => const HomePage(),
+                routes: [
+                  GoRoute(path: "category/:id", builder: (context, state) {
+                    final id = state.pathParameters['id']!;
+                    return CategoryPage(
+                      categoryId: id,
+                    );
+                  }),
+                ]),
           ])
     ]);
