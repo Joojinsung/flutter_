@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wadiz_clone/views/category/category_page.dart';
 import 'package:wadiz_clone/views/home/home_page.dart';
+import 'package:wadiz_clone/views/login/sign_up_page.dart';
 import 'package:wadiz_clone/views/my/my_page.dart';
 import 'package:wadiz_clone/views/widiz_app_shell.dart';
 
@@ -12,6 +13,11 @@ final router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: "/home",
     routes: [
+      GoRoute(path: "/sign-up", parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          return SignUpPage();
+        },
+      ),
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
         builder: (context, state, child) {

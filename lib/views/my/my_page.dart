@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:wadiz_clone/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -44,7 +45,9 @@ class _MyPageState extends State<MyPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              context.push("/sign-up");
+                            },
                             child: Row(
                               children: [
                                 Text("로그인하기"),
