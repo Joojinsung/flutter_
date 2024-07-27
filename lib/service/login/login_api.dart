@@ -13,13 +13,15 @@ abstract class LoginApiClient {
   @POST("/signup")
   Future<ResponseModel> signUp(
     @Body() LoginModel loginModel,
+  );
 
+  @POST("/signin")
+  Future<HttpResponse<dynamic>> signIn(
+    @Body() LoginModel body,
   );
 
   @GET("/checkauth")
   Future<ResponseModel> checkEmail(
-      @Body() LoginModel body,
-
-      );
-
+    @Body() LoginModel body,
+  );
 }

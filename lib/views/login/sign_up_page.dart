@@ -181,6 +181,7 @@ class _SignUpState extends State<SignUpPage> {
                     border: InputBorder.none,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none,
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(Icons.visibility),
@@ -205,6 +206,8 @@ class _SignUpState extends State<SignUpPage> {
                     border: InputBorder.none,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none,
+
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(Icons.visibility),
@@ -233,7 +236,6 @@ class _SignUpState extends State<SignUpPage> {
                             context: context,
                             builder: (context) => AlertDialog(
                               content: Text("이메일 중복확인을 체크해주세요."),
-
                             ),
                           );
                           return;
