@@ -15,4 +15,11 @@ abstract class LoginApiClient {
     @Body() LoginModel loginModel,
 
   );
+
+  @GET("/checkauth")
+  Future<ResponseModel> checkEmail(
+      @Body() LoginModel body,
+
+      );
+
 }

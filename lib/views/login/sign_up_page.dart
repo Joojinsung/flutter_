@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wadiz_clone/model/login/login_model.dart';
 import 'package:wadiz_clone/theme.dart';
+import 'package:wadiz_clone/view_model/login/login_view_model.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -17,6 +21,7 @@ class _SignUpState extends State<SignUpPage> {
   TextEditingController usernameTextController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool validated = false;
 
   @override
   void dispose() {
@@ -75,26 +80,70 @@ class _SignUpState extends State<SignUpPage> {
                       ),
                     ),
                     Gap(12),
-                    GestureDetector(
-                      child: Container(
-                        height: 54,
-                        width: 90,
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor.withOpacity(.55),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "인증하기",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              color: Colors.white,
+                    Consumer(builder: (context, ref, child) {
+                      return GestureDetector(
+                        onTap: () async {
+                          final result = await ref
+                              .read(loginViewModelProvider.notifier)
+                              .checkEmail(LoginModel(
+                                  email: emailTextController.text.trim()));
+
+                          if (context.mounted) {
+                            if (result) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content: Text("등록 가능한 아이디 입니다."),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          context.pop();
+                                        },
+                                        child: Text("확인"))
+                                  ],
+                                ),
+                              );
+                              validated = true;
+                              return;
+                            } else {
+                              validated = false;
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content:
+                                      Text("등록 불가능한 아이디 입니다. \n 이미 아이디가 있습니다."),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          context.pop();
+                                        },
+                                        child: Text("확인"))
+                                  ],
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        child: Container(
+                          height: 54,
+                          width: 90,
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withOpacity(.55),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "인증하기",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
+                      );
+                    })
                   ],
                 ),
                 Gap(20),
@@ -174,30 +223,85 @@ class _SignUpState extends State<SignUpPage> {
                   },
                 ),
                 Gap(20),
-                GestureDetector(
-                  onTap: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState?.save();
-                    }
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "약관 동의 후 가입 완료하기",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                Consumer(builder: (context, ref, child) {
+                  return GestureDetector(
+                    onTap: () async {
+                      if (formKey.currentState!.validate()) {
+                        formKey.currentState?.save();
+                        if (!validated) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: Text("이메일 중복확인을 체크해주세요."),
+
+                            ),
+                          );
+                          return;
+                        }
+                        final result = await ref
+                            .read(loginViewModelProvider.notifier)
+                            .signUp(
+                              LoginModel(
+                                email: emailTextController.text.trim(),
+                                password: passwordTextController.text.trim(),
+                                username: usernameTextController.text.trim(),
+                              ),
+                            );
+                        if (result) {
+                          if (context.mounted) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: Text("회원가입이 완료되었습니다 로그인을 진행해주세요"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        context.pop();
+                                        context.pop();
+                                      },
+                                      child: Text("확인")),
+                                ],
+                              ),
+                            );
+                          }
+                        } else {
+                          if (context.mounted) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: Text("회원가입에 실패하였습니다 다시 시도해주세요"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        context.pop();
+                                      },
+                                      child: Text("확인")),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      }
+                    },
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "약관 동의 후 가입 완료하기",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
+                  );
+                })
               ],
             ),
           ),

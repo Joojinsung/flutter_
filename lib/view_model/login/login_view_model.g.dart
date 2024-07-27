@@ -1,25 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_api_service.dart';
+part of 'login_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginApiClientHash() => r'1b4577d9aebe1fe48d33e7e1c40e828c0272e911';
+String _$loginViewModelHash() => r'76b0c546fb8ef0504dc2e41b74ed9956d816bbd6';
 
-/// See also [loginApiClient].
-@ProviderFor(loginApiClient)
-final loginApiClientProvider = Provider<LoginApiClient>.internal(
-  loginApiClient,
-  name: r'loginApiClientProvider',
+/// See also [LoginViewModel].
+@ProviderFor(LoginViewModel)
+final loginViewModelProvider =
+    NotifierProvider<LoginViewModel, LoginState>.internal(
+  LoginViewModel.new,
+  name: r'loginViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$loginApiClientHash,
+      : _$loginViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef LoginApiClientRef = ProviderRef<LoginApiClient>;
+typedef _$LoginViewModel = Notifier<LoginState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
