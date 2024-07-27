@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:wadiz_clone/theme.dart';
 
 class CategoryPage extends StatefulWidget {
   final String categoryId;
@@ -77,33 +78,158 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
             padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
             child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                      left: 32,
+              scrollDirection: Axis.horizontal,
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    left: 32,
+                  ),
+                  child: IntrinsicWidth(
+                    child: Column(
+                      children: [
+                        Gap(8),
+                        CircleAvatar(
+                          radius: 12,
+                        ),
+                        Gap(12),
+                        Text("테크"),
+                        Gap(12),
+                        Container(
+                          height: 6,
+                          color: Colors.black,
+                        )
+                      ],
                     ),
-                    child: IntrinsicWidth(
-                      child: Column(
-                        children: [
-                          Gap(8),
-                          CircleAvatar(
-                            radius: 12,
+                  ),
+                );
+              },
+            ),
+          ),
+          Divider(
+            height: 0,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      children: [
+                        DropdownButton(
+                          items: [
+                            DropdownMenuItem(
+                              child: Text("전체"),
+                            ),
+                          ],
+                          onChanged: (value) {},
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          underline: SizedBox.shrink(),
+                        ),
+                        Gap(24),
+                        DropdownButton(
+                          items: [
+                            DropdownMenuItem(
+                              child: Text("추천수"),
+                            ),
+                          ],
+                          onChanged: (value) {},
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          underline: SizedBox.shrink(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {},
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 24.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 120,
+                                  width: 164,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey,
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        right: 2,
+                                        top: 2,
+                                        child: IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            Icons.favorite_border,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Gap(12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "내 손안의 와이파이",
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Gap(8),
+                                      Text(
+                                        "홍길동",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.wadizGray[500],
+                                        ),
+                                      ),
+                                      Gap(8),
+                                      Text(
+                                        "1,000 명 참여",
+                                        style: TextStyle(
+                                          color: AppColors.primaryColor,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Gap(8),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 6, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.bg,
+                                        ),
+                                        child: Text(
+                                          "1,000원",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          Gap(12),
-                          Text("테크"),
-                          Gap(12),
-                          Container(
-                            height: 6,
-                            color: Colors.black,
-                          )
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
-                }),
-          )
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
