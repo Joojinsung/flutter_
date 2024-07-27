@@ -46,7 +46,7 @@ class _MyPageState extends State<MyPage> {
                         children: [
                           InkWell(
                             onTap: () {
-                              context.push("/sign-up");
+                              context.push("/login");
                             },
                             child: Row(
                               children: [
