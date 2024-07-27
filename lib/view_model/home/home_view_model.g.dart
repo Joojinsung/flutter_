@@ -6,7 +6,7 @@ part of 'home_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchHomeProjectHash() => r'43c326288fe978a9aeaa2ec052cce90a6bc2faf6';
+String _$fetchHomeProjectHash() => r'f2319acfc053b5cef3a3830d41b2a93f64f71425';
 
 /// See also [fetchHomeProject].
 @ProviderFor(fetchHomeProject)
@@ -22,7 +22,7 @@ final fetchHomeProjectProvider = AutoDisposeFutureProvider<HomeModel>.internal(
 
 typedef FetchHomeProjectRef = AutoDisposeFutureProviderRef<HomeModel>;
 String _$fetchHomeCategoriesHash() =>
-    r'afb96814064682bfabc51fdba03cfb8ed4c44bbe';
+    r'f6eb4e5bcdfb6947e1405121b4ff039aa96aa33b';
 
 /// See also [fetchHomeCategories].
 @ProviderFor(fetchHomeCategories)
