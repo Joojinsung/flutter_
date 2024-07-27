@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wadiz_clone/views/category/category_page.dart';
 import 'package:wadiz_clone/views/home/home_page.dart';
+import 'package:wadiz_clone/views/my/my_page.dart';
 import 'package:wadiz_clone/views/widiz_app_shell.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -12,25 +13,39 @@ final router = GoRouter(
     initialLocation: "/home",
     routes: [
       ShellRoute(
-          navigatorKey: _shellNavigatorKey,
-          builder: (context, state, child) {
-            return WidizAppShell(
-              currentIndex: 0,
-              child: child,
-            );
-          },
-          routes: [
-            GoRoute(
-                path: "/home",
-                parentNavigatorKey: _shellNavigatorKey,
-                builder: (context, state) => const HomePage(),
-                routes: [
-                  GoRoute(path: "category/:id", builder: (context, state) {
-                    final id = state.pathParameters['id']!;
-                    return CategoryPage(
-                      categoryId: id,
-                    );
-                  }),
-                ]),
-          ])
+        navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) {
+          return WidizAppShell(
+            currentIndex: switch (state.uri.path) {
+              var p when p.startsWith("/my") => 3,
+              _ => 0,
+            },
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: "/home",
+            parentNavigatorKey: _shellNavigatorKey,
+            builder: (context, state) => const HomePage(),
+            routes: [
+              GoRoute(
+                path: "category/:id",
+                builder: (context, state) {
+                  final id = state.pathParameters['id']!;
+                  return CategoryPage(
+                    categoryId: id,
+                  );
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+              path: "/my",
+              parentNavigatorKey: _shellNavigatorKey,
+              builder: (context, state) {
+                return MyPage();
+              }),
+        ],
+      ),
     ]);
