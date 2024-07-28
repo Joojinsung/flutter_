@@ -22,7 +22,7 @@ final fetchProjectTypesProvider =
 );
 
 typedef FetchProjectTypesRef = AutoDisposeFutureProviderRef<List<ProjectType>>;
-String _$projectViewModelHash() => r'8bac02de136e624aaf67351213f7f23d11aff4ab';
+String _$projectViewModelHash() => r'f3423de4d009d62d26d222e594b94d2ecf722b80';
 
 /// See also [ProjectViewModel].
 @ProviderFor(ProjectViewModel)

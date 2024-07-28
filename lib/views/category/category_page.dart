@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:wadiz_clone/theme.dart';
 import 'package:wadiz_clone/view_model/category/category_view_model.dart';
@@ -258,7 +260,13 @@ class _CategoryPageState extends ConsumerState<CategoryPage> {
                             itemBuilder: (context, index) {
                               final project = data[index];
                               return InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  context.push("/detail",
+                                  extra: json.encode(
+                                   project.toJson(),
+                                  )
+                                  );
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 24.0),
                                   child: Row(
