@@ -2,9 +2,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wadiz_clone/model/project/reward_model.dart';
 import 'package:wadiz_clone/theme.dart';
+import 'package:wadiz_clone/view_model/project/project_view_model.dart';
 
 class AddRewardPage extends StatefulWidget {
   final String projectId;
@@ -19,7 +22,7 @@ class _AddRewardPageState extends State<AddRewardPage> {
   TextEditingController priceTextEditingController = TextEditingController();
   TextEditingController titleTextEditingController = TextEditingController();
   TextEditingController descriptionTextEditingController =
-  TextEditingController();
+      TextEditingController();
 
   @override
   void dispose() {
@@ -130,7 +133,6 @@ class _AddRewardPageState extends State<AddRewardPage> {
               ),
               Gap(24),
               SizedBox(
-
                 height: 50,
                 child: Row(
                   children: [
@@ -148,25 +150,63 @@ class _AddRewardPageState extends State<AddRewardPage> {
               Gap(12),
               SizedBox(
                 height: 50,
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.primaryColor,
-                    ),
-                    child: Center(
-                      child: Text(
-                        "추가",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                          fontSize: 16,
+                child: Consumer(builder: (context, ref, child) {
+                  return GestureDetector(
+                    onTap: () async {
+                      final result = await ref
+                          .read(projectViewModelProvider.notifier)
+                          .createProjectReward(
+                            widget.projectId,
+                            RewardItemModel(
+                              title: titleTextEditingController.text.trim(),
+                              price: int.tryParse(
+                                priceTextEditingController.text.trim(),
+                              ),
+                              description:
+                                  descriptionTextEditingController.text.trim(),
+                              imageRaw: [],
+                              imageUrl: "",
+                            ),
+                          );
+                      if (result) {
+                        if (context.mounted) {
+                          showDialog(
+                              context: context,
+                              builder: (Context) {
+                                return AlertDialog(
+                                  title: Text("리워드 추가"),
+                                  content: Text("리워드가 추가되었습니다."),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        context.go("/my");
+                                      },
+                                      child: Text("확인"),
+                                    ),
+                                  ],
+                                );
+                              },);
+                        };
+                      };
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.primaryColor,
+                      ),
+                      child: Center(
+                        child: Text(
+                          "추가",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                }),
               ),
             ],
           ),

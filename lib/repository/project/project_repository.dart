@@ -44,6 +44,6 @@ class ProjectRepository {
 
 @riverpod
 ProjectRepository projectRepository(ref) {
-  final service = ref.watc(projectApiClientProvider);
+  final service = ref.watch(projectApiClientProvider);
   return ProjectRepository(service);
 }
