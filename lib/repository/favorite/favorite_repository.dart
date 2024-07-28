@@ -11,19 +11,15 @@ FavoriteRepository favoriteRepository(FavoriteRepositoryRef ref) {
 }
 
 class FavoriteRepository {
-  SharedPreferences pref;
+  final SharedPreferences pref;
 
   FavoriteRepository(this.pref);
 
   Future<bool> saveValue(String key, String value) async {
-    final result = await pref.setString(key, value);
-
-    return result;
+    return await pref.setString(key, value);
   }
 
-  Future<String?> readValue(String key) async {
-    final result = pref.getString(key);
-
-    return result;
+  String? readValue(String key) {
+    return pref.getString(key);
   }
 }

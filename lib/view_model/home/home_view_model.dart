@@ -62,17 +62,17 @@ Future<List<ProjectCategory>> fetchHomeCategories(ref) async {
     ProjectCategory(
       id: 5,
       iconPath: "assets/icons/categories/5.png",
-      title: "혜택",
+      title: "쇼핑",
     ),
     ProjectCategory(
       id: 3,
       iconPath: "assets/icons/categories/3.png",
-      title: "2번!",
+      title: "쇼핑몰",
     ),
     ProjectCategory(
       id: 2,
       iconPath: "assets/icons/categories/2.png",
-      title: "오픈예정",
+      title: "지갑",
     ),
 
 
@@ -81,27 +81,23 @@ Future<List<ProjectCategory>> fetchHomeCategories(ref) async {
     ProjectCategory(
       id: 7,
       iconPath: "assets/icons/categories/7.png",
-      title: "오픈예정!",
+      title: "카드혜택!",
     ),
     ProjectCategory(
       id: 6,
       iconPath: "assets/icons/categories/6.png",
-      title: "ㅂㅂ!",
+      title: "선물",
     ),
     ProjectCategory(
       id: 9,
       iconPath: "assets/icons/categories/8.png",
-      title: "ㅈㅈ 수강",
+      title: "할인품목",
     ),
-    ProjectCategory(
-      id: 8,
-      iconPath: "assets/icons/categories/8.png",
-      title: "ㄷㄷ 수강",
-    ),
+
     ProjectCategory(
       id: 4,
       iconPath: "assets/icons/categories/4.png",
-      title: "예약구매!",
+      title: "SHOP",
     ),
   ];
   return categories;

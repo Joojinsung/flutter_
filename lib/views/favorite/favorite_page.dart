@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wadiz_clone/theme.dart';
+import 'package:wadiz_clone/view_model/favorite/favorite_view_model.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
@@ -69,91 +72,118 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
             Gap(12),
             Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(
-                        left: 16, right: 16, top: 20, bottom: 8),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0, 8),
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 30,
-                              spreadRadius: 4),
-                        ]),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 190,
-                          decoration: BoxDecoration(
-                            color: Colors.amber,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8),
+              child: Consumer(builder: (context, ref, child) {
+                final favorites = ref.watch(favoriteViewModelProvider);
+                if (favorites.projects.isEmpty) {
+                  return Center(
+                    child: Text("관심 있는 프로젝트가 없습니다."),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: favorites.projects.length,
+                  itemBuilder: (context, index) {
+                    final project = favorites.projects[index];
+                    return Container(
+                      margin: EdgeInsets.only(
+                          left: 16, right: 16, top: 20, bottom: 8),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(0, 8),
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 30,
+                                spreadRadius: 4),
+                          ]),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 190,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  topRight: Radius.circular(8),
+                                ),
+                                image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                      project.thumbnail ?? "",
+
+                                    ), fit: BoxFit.cover
+                                )
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  right: 8,
+                                  top: 8,
+                                  child: IconButton(
+                                    onPressed: () async {
+                                     await showDialog(
+                                          context: context, builder: (context) {
+                                        return AlertDialog(
+                                          content: Text("구독을 취소할까요?"),
+                                          actions: [
+                                            TextButton(onPressed: (){
+                                              ref.read(favoriteViewModelProvider.notifier).removeItem(project);
+
+                                              Navigator.of(context).pop();
+                                            }, child: Text("네"),),
+                                          ],);
+                                      });
+                                    },
+                                    icon: Icon(Icons.favorite),
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                right: 8,
-                                top: 8,
-                                child: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.favorite),
-                                  color: Colors.red,
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${project.totalFundedCount} 명이 기다려요",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18,
+                                      color: AppColors.primaryColor),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "n 명이 기다려요",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18,
-                                    color: AppColors.primaryColor),
-                              ),
-                              Gap(8),
-                              Text(
-                                "놀라운 프로젝트",
-                              ),
-                              Gap(24),
-                              Text(
-                                "홍길동",
-                                style: TextStyle(
-                                  color: AppColors.wadizGray[500],
+                                Gap(8),
+                                Text(
+                                  "${project.title}",
                                 ),
-                              ),
-                              Gap(12),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: AppColors.bg,
-                                  borderRadius: BorderRadius.circular(4),
+                                Gap(24),
+                                Text(
+                                  "${project.owner}",
+                                  style: TextStyle(
+                                    color: AppColors.wadizGray[500],
+                                  ),
                                 ),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                child: Text(
-                                  "오픈예정",
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
+                                Gap(12),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.bg,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  child: Text(
+                                    "${project.isOpen == "open" ? "바로구매" : "오픈예정"}",
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }),
             )
           ],
         ),

@@ -9,8 +9,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:wadiz_clone/model/category/category_model.dart';
 import 'package:wadiz_clone/model/project/project_model.dart';
 import 'package:wadiz_clone/theme.dart';
+import 'package:wadiz_clone/view_model/favorite/favorite_view_model.dart';
 import 'package:wadiz_clone/view_model/project/project_view_model.dart';
 
 class ProjectDetailPage extends StatefulWidget {
@@ -226,7 +228,9 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
           );
         });
       }),
-      bottomNavigationBar: _BottomAppBar(),
+      bottomNavigationBar: _BottomAppBar(
+        projectItemModel: projectItemModel,
+      ),
     );
   }
 }
@@ -319,11 +323,18 @@ class _ProjectWidget extends StatelessWidget {
   }
 }
 
-class _BottomAppBar extends StatelessWidget {
-  const _BottomAppBar({super.key});
+class _BottomAppBar extends ConsumerWidget {
+  final ProjectItemModel projectItemModel;
+
+  const _BottomAppBar({super.key, required this.projectItemModel});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favorites = ref.watch(favoriteViewModelProvider);
+    final current = favorites.projects
+        .where((element) => element.id == projectItemModel.id)
+        .toList();
+
     return BottomAppBar(
       height: 79,
       color: Colors.white,
@@ -343,8 +354,50 @@ class _BottomAppBar extends StatelessWidget {
             Column(
               children: [
                 IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.favorite_border),
+                  onPressed: () {
+                    if (current.isNotEmpty) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text("안내"),
+                              content: Text("구독을 취소할까요?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(
+                                            favoriteViewModelProvider.notifier)
+                                        .removeItem(CategoryItemModel(
+                                          id: projectItemModel.id,
+                                        ));
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("네"),
+                                ),
+                              ],
+                            );
+                          });
+                      return;
+                    }
+                    ref.read(favoriteViewModelProvider.notifier).addItem(
+                          CategoryItemModel(
+                            id: projectItemModel.id,
+                            thumbnail: projectItemModel.thumbnail,
+                            deadline: projectItemModel.description,
+                            title: projectItemModel.title,
+                            owner: projectItemModel.owner,
+                            totalFunded: projectItemModel.totalFunded,
+                            totalFundedCount: projectItemModel.totalFundedCount,
+                          ),
+                        );
+                  },
+                  icon: Icon(
+                    current.isNotEmpty
+                        ? Icons.favorite_border
+                        : Icons.favorite_border,
+                  ),
+                  color : current.isNotEmpty ? Colors.red: Colors.black
                 ),
                 Text("1만+"),
               ],
