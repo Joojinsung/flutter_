@@ -7,6 +7,7 @@ import 'package:wadiz_clone/views/login/sign_up_page.dart';
 import 'package:wadiz_clone/views/my/my_page.dart';
 import 'package:wadiz_clone/views/project/add_project_page.dart';
 import 'package:wadiz_clone/views/project/add_reward_page.dart';
+import 'package:wadiz_clone/views/project/project_detail_page.dart';
 import 'package:wadiz_clone/views/widiz_app_shell.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -80,6 +81,14 @@ final router = GoRouter(
           },
         ),
       ],
+    ),
+    GoRoute(
+      path: "/detail",
+      builder: (context, state) {
+        final project = state.extra as String;
+        return ProjectDetailPage(project: project,);
+
+      },
     ),
   ],
 );

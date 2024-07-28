@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -96,7 +98,6 @@ class _HomePageState extends State<HomePage> {
                                 return InkWell(
                                   onTap: () {
                                     context.push("/home/category/${data.id}");
-
                                   },
                                   child: Column(
                                     children: [
@@ -158,9 +159,16 @@ class _HomePageState extends State<HomePage> {
                       child: ListView.builder(
                         itemCount: 10,
                         itemBuilder: (context, index) {
-                          final project = data?.projects[index];
+                          final project = data.projects[index];
                           return InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              context.push(
+                                "/detail",
+                                extra: json.encode(
+                                  project.toJson(),
+                                ),
+                              );
+                            },
                             child: Container(
                               margin: EdgeInsets.only(
                                   bottom: 8, left: 16, right: 16, top: 20),
