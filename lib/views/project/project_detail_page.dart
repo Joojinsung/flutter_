@@ -4,12 +4,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:wadiz_clone/model/project/project_model.dart';
 import 'package:wadiz_clone/theme.dart';
+import 'package:wadiz_clone/view_model/project/project_view_model.dart';
 
 class ProjectDetailPage extends StatefulWidget {
   final String project;
@@ -59,158 +61,179 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 150,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              image: DecorationImage(
-                image: CachedNetworkImageProvider(
-                  projectItemModel.thumbnail ?? "",
-                ),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(.2),
-                  BlendMode.darken,
+      body: Consumer(builder: (context, ref, child) {
+        final project = ref.watch(
+          projectDetailViewModelProvider(
+            projectItemModel.id.toString(),
+          ),
+        );
+        return project.when(data: (data) {
+          return Column(
+            children: [
+              Container(
+                height: 150,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(
+                      projectItemModel.thumbnail ?? "",
+                    ),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(.2),
+                      BlendMode.darken,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Expanded(
-            child: ValueListenableBuilder(
-                valueListenable: isMore,
-                builder: (context, value, child) {
-                  return Stack(
-                    children: [
-                      Positioned.fill(
-                        child: SingleChildScrollView(
-                          physics: !value
-                              ? NeverScrollableScrollPhysics()
-                              : BouncingScrollPhysics(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                                child: _ProjectWidget(
-                                  data: projectItemModel,
-                                ),
-                              ),
-                              Divider(
-                                color: AppColors.bg,
-                                height: 12,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "프로젝트 스토리",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700),
+              Expanded(
+                child: ValueListenableBuilder(
+                    valueListenable: isMore,
+                    builder: (context, value, child) {
+                      return Stack(
+                        children: [
+                          Positioned.fill(
+                            child: SingleChildScrollView(
+                              physics: !value
+                                  ? NeverScrollableScrollPhysics()
+                                  : BouncingScrollPhysics(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                                    child: _ProjectWidget(
+                                      data: data,
                                     ),
-                                    Gap(12),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.newBg,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      padding: EdgeInsets.all(16),
-                                      child: Text("도서산간에 해당하는 서포터님은 배송가능 여부를 "
-                                          "반드시 메이커에게 문의 후 참여해주세요."),
+                                  ),
+                                  Divider(
+                                    color: AppColors.bg,
+                                    height: 12,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "프로젝트 스토리",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        Gap(12),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: AppColors.newBg,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          padding: EdgeInsets.all(16),
+                                          child:
+                                              Text("도서산간에 해당하는 서포터님은 배송가능 여부를 "
+                                                  "반드시 메이커에게 문의 후 참여해주세요."),
+                                        ),
+                                        Gap(12),
+                                        Image.asset(
+                                          width: double.infinity,
+                                          "assets/image/advertising_image.png",
+                                          fit: BoxFit.fitWidth,
+                                        ),
+                                      ],
                                     ),
-                                    Gap(12),
-                                    Image.asset(
-                                      width: double.infinity,
-                                      "assets/image/advertising_image.png",
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (!value)
-                        Positioned(
-                          left: 16,
-                          right: 16,
-                          bottom: 0,
-                          child: Container(
-                            height: 20,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.white,
-                                  Colors.white,
-                                  Colors.white,
-                                  Colors.white,
-                                  Colors.white,
-                                  Colors.white.withOpacity(.1),
+                                  ),
                                 ],
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
                               ),
                             ),
                           ),
-                        ),
-                      if (!value)
-                        Positioned(
-                          left: 16,
-                          right: 16,
-                          bottom: 16,
-                          child: GestureDetector(
-                            onTap: () {
-                              isMore.value = true;
-                            },
-                            child: Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(
-                                  color: AppColors.primaryColor,
+                          if (!value)
+                            Positioned(
+                              left: 16,
+                              right: 16,
+                              bottom: 0,
+                              child: Container(
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.white,
+                                      Colors.white,
+                                      Colors.white,
+                                      Colors.white,
+                                      Colors.white,
+                                      Colors.white.withOpacity(.1),
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                  ),
                                 ),
-                                borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "스토리 더보기",
-                                    style: TextStyle(
-                                      fontSize: 16,
+                            ),
+                          if (!value)
+                            Positioned(
+                              left: 16,
+                              right: 16,
+                              bottom: 16,
+                              child: GestureDetector(
+                                onTap: () {
+                                  isMore.value = true;
+                                },
+                                child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
                                       color: AppColors.primaryColor,
                                     ),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  Gap(12),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: AppColors.primaryColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "스토리 더보기",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.primaryColor,
+                                        ),
+                                      ),
+                                      Gap(12),
+                                      Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: AppColors.primaryColor,
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
-          )
-        ],
-      ),
+                        ],
+                      );
+                    }),
+              )
+            ],
+          );
+        }, error: (error, trace) {
+          return Center(
+            child: Text("${error.toString()}"),
+          );
+        }, loading: () {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+      }),
       bottomNavigationBar: _BottomAppBar(),
     );
   }
 }
 
 class _ProjectWidget extends StatelessWidget {
-
   final ProjectItemModel data;
+
   const _ProjectWidget({super.key, required this.data});
 
   @override
@@ -250,11 +273,9 @@ class _ProjectWidget extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 color: AppColors.secondary,
-                borderRadius:
-                BorderRadius.circular(3),
+                borderRadius: BorderRadius.circular(3),
               ),
-              padding: EdgeInsets.symmetric(
-                  horizontal: 6, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
               child: Text(
                 "${DateTime.parse(data.deadline ?? "").difference(DateTime.now()).inDays}일 남음",
                 style: TextStyle(
@@ -280,11 +301,9 @@ class _ProjectWidget extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 color: AppColors.bg,
-                borderRadius:
-                BorderRadius.circular(3),
+                borderRadius: BorderRadius.circular(3),
               ),
-              padding: EdgeInsets.symmetric(
-                  horizontal: 6),
+              padding: EdgeInsets.symmetric(horizontal: 6),
               child: Text(
                 "${data.totalFundedCount} 명 참여",
                 style: TextStyle(
@@ -299,7 +318,6 @@ class _ProjectWidget extends StatelessWidget {
     );
   }
 }
-
 
 class _BottomAppBar extends StatelessWidget {
   const _BottomAppBar({super.key});
