@@ -173,7 +173,7 @@ class _FetchProjectByIdProviderElement
 }
 
 String _$projectDetailViewModelHash() =>
-    r'b458ccc9b5f21d9250121044c951e2f62ae779b8';
+    r'2fc5200820be8139f60bf03f08be5f6a6cfdace5';
 
 abstract class _$ProjectDetailViewModel
     extends BuildlessAutoDisposeAsyncNotifier<ProjectItemModel> {
