@@ -45,18 +45,17 @@ class _WidizAppShellState extends ConsumerState<WidizAppShell> {
             ),
           );
         }
-        break;
-
+        return;
+      case 2:
+        GoRouter.of(context).go("/favorite");
       case 3:
         GoRouter.of(context).go("/my");
         break;
-
       default:
         GoRouter.of(context).go("/home");
         break;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

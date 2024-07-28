@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wadiz_clone/views/category/category_page.dart';
+import 'package:wadiz_clone/views/favorite/favorite_page.dart';
 import 'package:wadiz_clone/views/home/home_page.dart';
 import 'package:wadiz_clone/views/login/sign_in_page.dart';
 import 'package:wadiz_clone/views/login/sign_up_page.dart';
@@ -36,6 +37,7 @@ final router = GoRouter(
       builder: (context, state, child) {
         return WidizAppShell(
           currentIndex: switch (state.uri.path) {
+            var p when p.startsWith("/favorite") => 2,
             var p when p.startsWith("/my") => 3,
             _ => 0,
           },
@@ -58,6 +60,13 @@ final router = GoRouter(
               },
             ),
           ],
+        ),
+        GoRoute(
+          path: "/favorite",
+          parentNavigatorKey: _shellNavigatorKey,
+          builder: (context, state) {
+            return FavoritePage();
+          },
         ),
         GoRoute(
           path: "/my",
@@ -86,8 +95,9 @@ final router = GoRouter(
       path: "/detail",
       builder: (context, state) {
         final project = state.extra as String;
-        return ProjectDetailPage(project: project,);
-
+        return ProjectDetailPage(
+          project: project,
+        );
       },
     ),
   ],
